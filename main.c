@@ -37,6 +37,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * 
  */
+
+
 /** @file
  *
  * @defgroup ble_sdk_app_template_main main.c
@@ -55,6 +57,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "our_service.h"
 #include "nordic_common.h"
 #include "nrf.h"
 #include "app_error.h"
@@ -81,9 +84,11 @@
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
+#include "SEGGER_RTT.h"
+
 
 #define DEVICE_NAME                     "Nordic"                       /**< Name of device. Will be included in the advertising data. */
-#define APP_ADV_INTERVAL                300                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
+#define APP_ADV_INTERVAL                50                                   /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 
 #define APP_ADV_DURATION                18000                                   /**< The advertising duration (180 seconds) in units of 10 milliseconds. */
 #define APP_BLE_OBSERVER_PRIO           3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
@@ -116,7 +121,10 @@ BLE_ADVERTISING_DEF(m_advertising);                                             
 
 static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                        /**< Handle of the current connection. */
 
+// STEP 1: Declare a ble_os_t service structure for our application
+static ble_os_t m_our_service;
 
+// STEP 5: Declare variable holding our service UUID
 
 
 static ble_uuid_t m_adv_uuids[] =                                               /**< Universally unique service identifiers. */
@@ -252,6 +260,16 @@ static void timers_init(void)
     ret_code_t err_code = app_timer_init();
     APP_ERROR_CHECK(err_code);
 
+    // Create timers.
+
+    /* YOUR_JOB: Create any timers to be used by the application.
+                 Below is an example of how to create a timer.
+                 For every new timer needed, increase the value of the macro APP_TIMER_MAX_TIMERS by
+                 one.
+       ret_code_t err_code;
+       err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
+       APP_ERROR_CHECK(err_code); */
+
 }
 
 
@@ -297,6 +315,32 @@ static void gatt_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+/**@brief Function for handling the YYY Service events.
+ * YOUR_JOB implement a service handler function depending on the event the service you are using can generate
+ *
+ * @details This function will be called for all YY Service events which are passed to
+ *          the application.
+ *
+ * @param[in]   p_yy_service   YY Service structure.
+ * @param[in]   p_evt          Event received from the YY Service.
+ *
+ *
+static void on_yys_evt(ble_yy_service_t     * p_yy_service,
+                       ble_yy_service_evt_t * p_evt)
+{
+    switch (p_evt->evt_type)
+    {
+        case BLE_YY_NAME_EVT_WRITE:
+            APPL_LOG("[APPL]: charact written with value %s. ", p_evt->params.char_xx.value.p_str);
+            break;
+
+        default:
+            // No implementation needed.
+            break;
+    }
+}
+*/
+
 
 /**@brief Function for handling Queued Write Module errors.
  *
@@ -324,6 +368,10 @@ static void services_init(void)
 
     err_code = nrf_ble_qwr_init(&m_qwr, &qwr_init);
     APP_ERROR_CHECK(err_code);
+
+    // STEP 2: Add code to initialize the services used by the application.
+    our_service_init(&m_our_service);
+    
 
 }
 
@@ -382,7 +430,16 @@ static void conn_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+/**@brief Function for starting timers.
+ */
+static void application_timers_start(void)
+{
+    /* YOUR_JOB: Start your timers. below is an example of how to start a timer.
+       ret_code_t err_code;
+       err_code = app_timer_start(m_app_timer_id, TIMER_INTERVAL, NULL);
+       APP_ERROR_CHECK(err_code); */
 
+}
 
 
 /**@brief Function for putting the chip into sleep mode.
@@ -616,6 +673,10 @@ static void advertising_init(void)
 
     memset(&init, 0, sizeof(init));
 
+    init.advdata.name_type               = BLE_ADVDATA_FULL_NAME;
+    init.advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+
+/*
     ble_advdata_manuf_data_t            manuf_data; //Variable to hold manufacturer specific data
     uint8_t data[]                      = "SomeData!"; // the data
     manuf_data.company_identifier       = 0x0059;
@@ -623,15 +684,13 @@ static void advertising_init(void)
     manuf_data.data.size                = sizeof(data);
     init.advdata.p_manuf_specific_data  = &manuf_data;
 
-    
-    init.advdata.name_type               = BLE_ADVDATA_SHORT_NAME;
-    init.advdata.short_name_len          = 5;
-    //init.advdata.include_appearance      = true; // this setting causes device not to advertise??
-    init.advdata.flags                   = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+
     init.advdata.uuids_complete.uuid_cnt = sizeof(m_adv_uuids) / sizeof(m_adv_uuids[0]);
     init.advdata.uuids_complete.p_uuids  = m_adv_uuids;
     int8_t tx_power = -1;
     init.advdata.p_tx_power_level       = &tx_power;  // power level 
+*/
+    // STEP 6: Declare and instantiate the scan response
 
     init.config.ble_adv_fast_enabled  = true;
     init.config.ble_adv_fast_interval = APP_ADV_INTERVAL;
@@ -739,8 +798,11 @@ int main(void)
     // Start execution.
     NRF_LOG_INFO("Ble tutorial started.");
 
+    application_timers_start();
     advertising_start(erase_bonds);
 
+
+    SEGGER_RTT_WriteString(0, "Hello World\n");
     // Enter main loop.
     for (;;)
     {

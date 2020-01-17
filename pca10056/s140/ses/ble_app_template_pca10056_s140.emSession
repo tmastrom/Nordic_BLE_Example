@@ -38,9 +38,10 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="56" y="618" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="595" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="183" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/ble_advertising/ble_advertising.h" selected="0" top="164" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="164" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/common/ble_advdata.h" selected="0" top="139" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="4" y="256" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="240" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="12" y="183" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/ble_advertising/ble_advertising.h" selected="0" top="164" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="42" y="151" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/common/ble_advdata.h" selected="0" top="136" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="7199" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="7180" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ble_app_template_pca10056_s140" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>
