@@ -1,1 +1,1 @@
-#Nordic BLE Example
+# Nordic BLE Advertising Example
